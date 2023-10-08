@@ -17,17 +17,19 @@ Hence, module input will be any data set (data.frame in `R`) and the output will
 -   Features type, properties and statistical summary
 -   Features visualization
 
-Check Figure 2.1 for module objective summary. 
+Check @fig-2_1 for module objective summary. 
 
 ```{mermaid}
 %%| fig-cap: "Figure 2.1: Feature Analyzer Module (FAM) Objective"
 %%| fig-width: 8 
+%%| label: fig-2_1
 flowchart LR
-  A[R data.frame] --> B>"Feature Analyzer Module
+  A[R data.frame] --> C>"Feature Analyzer Module
   - Identify feature type
   - Calculate feature statistical summary
   - Visualize feature data"]
-  B --> C["- Data Summary
+  B[Configurations input] --> C
+  C --> D["- Data Summary
   - Data Features type, 
     properties and statistical summary
   - Data Features plots"]
@@ -36,23 +38,26 @@ flowchart LR
 
 Rest of this chapter will discuss module input, output and functions in more details while building it step by step
 
-## Background
+## Module Input
+Module will have two different input types:
 
-But first what is data in first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically? and how to use `R` to measure them?
+- Data input: as stated in @fig-2_1, that will be any `R` data.frame object
+- Configurations input: that is list of configuration parameters to customize module default behavior and/or look and feel if needed
 
-In the following sections we will seek the answer for these questions and more
+As data input is the main input, the next sections will discuss what is data in the first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically?
 
-### Data
 
-Data can be defined as a collection of observations or facts that describe an event or answer a question scientifically in order to make an informative decision later (ref:https://www.wordnik.com/words/data)
+### Data Definition
+
+Data can be defined as a collection of observations or facts that describe an event or answer a question scientifically in order to make an informative decision later
 
 Examples for that can be:
 
 -   Students grades in certain class/school
 -   The trees growth rate for certain forest
--   Which goods attract customer more in certain market
+-   Goods selling information in certain market
 
-Observations can be collected for a feature or more that describe that event such as:
+Observations can be collected for one or more features to describe an event such as:
 
 -   Students name, gender, subject, grade, etc..
 -   Trees type, name, tall, etc..
@@ -60,7 +65,11 @@ Observations can be collected for a feature or more that describe that event suc
 
 Each feature gives an insight or different look into the data in which leads to an informative decision or answer at the end
 
-TODO: show available datasets in R and briefly how to load external datasets in R and build downloadable table shows available datasets name and their dimensions
+### Data in R
+
+There are multiple data types for storing data in `R` (i.e matrix, tibbles, tables, ...). However, the most commonly used data type is `data.format` and `tibbles` that extends `data.format` and these are the two types that will be used as an input for the module.
+
+On the other hand, data can be loaded into `R` using multiple functions in base `R` (i.e `?read.csv`, `?read.tsv`) or in extended packages (i.e `?readr::read_csv` package) and discussing that in details is beyond this book scope. Lucky us, base R comes with many available datasets in `datasets` base package, in which will be used through out this chapter. To know more about available datasets check `library(help = "datasets")`
 
 ## Features Data Types
 
