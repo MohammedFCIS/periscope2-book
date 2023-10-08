@@ -1,18 +1,46 @@
 # Feature Analyzer Module
 
-## Objective
+## Module Objective
 
-This module targets to identify data different features types, analyze their central tendency and dispersion, along with plotting feature distribution based on its type.
+The module aims to help data analyzers to understand their data better by:
 
-So, in this chapter we will know:
+-   identifying data features and understanding each feature nature (data feature type),
+-   understanding feature distribution over data observations (central tendency and dispersion),
+-   visualizing data features correctly to get more insights (data visualization),
+-   and understanding the relation among features and each other (correlation).
 
--   What is data?
--   What is data features? what are its types?
--   How to analyze data?
--   How to use R in analyzing data?
--   Building data measures shiny module
+*Note: Correlation among features will be discussed in more details in next chapter.*
+
+Hence, module input will be any data set (data.frame in `R`) and the output will be up-to-certain limit an interactive report that displays:
+
+-   Data summary (number of features and number of observations)
+-   Features type, properties and statistical summary
+-   Features visualization
+
+Check Figure 2.1 for module objective summary. 
+
+```{mermaid}
+%%| fig-cap: "Figure 2.1: Feature Analyzer Module (FAM) Objective"
+%%| fig-width: 8 
+flowchart LR
+  A[R data.frame] --> B>"Feature Analyzer Module
+  - Identify feature type
+  - Calculate feature statistical summary
+  - Visualize feature data"]
+  B --> C["- Data Summary
+  - Data Features type, 
+    properties and statistical summary
+  - Data Features plots"]
+```
+
+
+Rest of this chapter will discuss module input, output and functions in more details while building it step by step
 
 ## Background
+
+But first what is data in first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically? and how to use `R` to measure them?
+
+In the following sections we will seek the answer for these questions and more
 
 ### Data
 
@@ -32,16 +60,9 @@ Observations can be collected for a feature or more that describe that event suc
 
 Each feature gives an insight or different look into the data in which leads to an informative decision or answer at the end
 
-To extract feature insight we need to understand data features more:
+TODO: show available datasets in R and briefly how to load external datasets in R and build downloadable table shows available datasets name and their dimensions
 
--   its type
--   its characteristics
--   its distribution
--   and its relation with other features
-
-In next section we will explore features data types as that is the key to understand everything after
-
-### Features Data Types
+## Features Data Types
 
 To analyze data features and extract useful insights from it, we need to understand its nature and type to analyze it correctly and since features can be considered data descriptors, they can be anything and have any type. However, we can classify any feature type into two main groups:
 
@@ -53,8 +74,11 @@ Complex feature is any feature that cannot be straight forward measured or got a
 In contrast, Simple feature is any feature that can be directly classified, measured and got analyzed statistically (i.e height, width, age, class, etc..). This type can classified into three main sub-types:
 
 -   Categorical
+
 -   Discrete
--   Continuous Figure (2.1) summarizes these types (check snippet 2.1 for generating below tree)\
+
+-   Continuous Figure (2.1) summarizes these types (check snippet 2.1 for generating below tree)
+
     ![Features Classifications](Images/2_1_Features_Classification.png)
 
 In next sections, we will discuss these types in more detail and discuss how to analyze them using R
@@ -86,16 +110,16 @@ Continues feature is a numeric feature with an infinite and uncountable number o
 
 ### Features Central Tendency Measures and Dispersion
 
-Normally, data collections have hundreds to thousands of observations for its different features. Hence, to understand this amount of data and extract decision making supporting insights, we need to use different statistical methods to summarize data and know its dispersion. In next sections, the most famous features tendency measures and dispersion will be discussed in brief and how we can use them in `R`
+Normally, data collections have hundreds to thousands of observations for its different features. Hence, to understand this amount of data and extract decision making supporting insights, we need to use different statistical methods to summarize data and know its dispersion. In next sections, the most FAMous features tendency measures and dispersion will be discussed in brief and how we can use them in `R`
 
 #### Central Tendency Measures
 
 A measure of central tendency is a feature data *average/center* value. The most common measures of central tendency methods are:
 
-- The arithmetic mean
-- The median
-- Quantiles
-- The mode
+-   The arithmetic mean
+-   The median
+-   Quantiles
+-   The mode
 
 In next subsection, each method will be discussed briefly with an `R` example if applicable
 
@@ -123,12 +147,10 @@ Median value is the value that divides feature data into two equal sets. The med
 *Note: feature observations need to be ordered before calculating the mean. Lucky us, `R` is doing that for us*
 
 $$
-\begin{equation*}
     median = \begin{cases}
-              x_{\frac{n+1}{2}}  & \text{ if } n \text{ is odd} \\
-              \frac{1}{2}(x_{\frac{n}{2}} + x_{\frac{n}{2} + 1}) & \text{ otherwise}
+              x_{\frac{n+1}{2}}  & \text{ if } n \text{is odd} \\
+              \frac{1}{2}(x_{\frac{n}{2}} + x_{\frac{n}{2} + 1}) & \text{otherwise}
           \end{cases}
-\end{equation*}
 $$
 
 and it can be calculated using `median` function in `R`: Ex1: Median of height of`R` embedded dataset `tree` is:
@@ -140,23 +162,25 @@ median(trees$Height)
 *Note: mean and median values happen to the same in the used dataset as it symmetrically distributed around its center, but that is not usually the case*
 
 ##### Quantiles
-If we need to divide data into more partitions than just two then we use quantiles, for example: 
 
-- a *15 %-quantile* divides the data into two parts such that at least **15%** of the values are less than or equal to the quantile and at least **85%** of the values are greater than or equal to the quantile.
+If we need to divide data into more partitions than just two then we use quantiles, for example:
+
+-   a *15 %-quantile* divides the data into two parts such that at least **15%** of the values are less than or equal to the quantile and at least **85%** of the values are greater than or equal to the quantile.
 
 Hence, quantiles can take any integer value from *0* to *100* (here it will called **percentiles**) or decimal value between *0* and *1* (here it will called **quintiles**)
 
 Quantiles have special values as follow:
 
-- *0 %-quantile*: the minimum data value
-- *50 %-quantile*: the median value
-- *100 %-quantile*: the maximum data value
+-   *0 %-quantile*: the minimum data value
+-   *50 %-quantile*: the median value
+-   *100 %-quantile*: the maximum data value
 
 ```{r}
 quantile(trees$Height)
 ```
 
 ##### Mode
+
 The most frequent value in feature observations called feature *mode*. Hence, the value can be calculated for any feature type.
 
 It cannot be directly calculate with `R`. Hence, a custom function to calculate mode value will be developed in the module later.
@@ -165,21 +189,21 @@ It cannot be directly calculate with `R`. Hence, a custom function to calculate 
 
 Feature dispersion (or variability) is to know how feature data is spread out, to know if data is squeezed or scattered, to know if the data is homogenous or heterogeneous.
 
-The most famous methods to calculate dispersion are:
+The most FAMous methods to calculate dispersion are:
 
-- Range, 
-- Interquartile Range, 
-- Variance, 
-- and Standard Deviation. 
+-   Range,
+-   Interquartile Range,
+-   Variance,
+-   and Standard Deviation.
 
 In next subsection, each method will be discussed briefly with an `R` example if applicable
 
 ##### Range and Interquartile Range
 
-- **Range** is the difference between maximum and minimum values in the dataset
-- **Interquartile Range** is the difference between *75th* and *25th* quartiles values
+-   **Range** is the difference between maximum and minimum values in the dataset
+-   **Interquartile Range** is the difference between *75th* and *25th* quartiles values
 
-To obtain needed values to calculate both **Range** and **Interquartile Range** using `R, use `summary` function as follow:
+To obtain needed values to calculate both **Range** and **Interquartile Range** using `R, use`summary\` function as follow:
 
 ```{r}
 summary(trees$Height)
@@ -187,17 +211,16 @@ summary(trees$Height)
 
 ##### Variance
 
-Variance is the important and known dispersion value and symbolized as $\sigma^2$ and can be calculated as follow:
-$$
+Variance is the important and known dispersion value and symbolized as $\sigma^2$ and can be calculated as follow: $$
  \sigma^2 = \sum{\frac{(x_i - \mu)^2}{N}}
-$$
-where μ is the population mean, $x_i$ is the *ith* element from the population, *N* is the population size, and Σ is just a fancy symbol that means “sum.”
+$$ where μ is the population mean, $x_i$ is the *ith* element from the population, *N* is the population size, and Σ is just a fancy symbol that means "sum."
 
 To calculate **variance** in `R`, use `var` function as follow
 
 ```{r}
 var(trees$Height)
 ```
+
 ##### Standard Deviation
 
 Standard deviation is simply the square root of variance and to calculate it in `R`, use `sd` function as follow
@@ -208,28 +231,24 @@ sd(trees$Height) == sqrt(var(trees$Height))
 ```
 
 ### Features Visualization
+
 Numerical analysis is very important as discussed in previous section. However, a picture worthies more than a thousand word. Hence, presenting the feature visually in a chart helps to summarize the feature in a more easy-to-understand method to human brain. Moreover, using cavansXpress will allow us to show numerical analysis along with the visual analysis easily with the ability to switch between different charts without re-coding our chart, in addition to many other on-shelf features that were discussed in chapter 1.
 
-In next sections, the most famous features graphical representations will be discussed in more details with examples on how to implement them using `R` and `canvasXpress` package.
+In next sections, the most FAMous features graphical representations will be discussed in more details with examples on how to implement them using `R` and `canvasXpress` package.
 
 #### Pie Chart
 
 The simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%
 
-![Frequency Barplot](Images/2_2_a_pie_chart.png)
-![Frequency Barplot](Images/2_2_b_pie_chart.png)
-(check Ch2_2.2.R for generating the above charts)
+![Frequency Barplot](Images/2_2_a_pie_chart.png) ![Frequency Barplot](Images/2_2_b_pie_chart.png) (check Ch2_2.2.R for generating the above charts)
 
 #### Bar Plot
 
 Another method to visualize categorical data. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*.
 
 ![Frequency Barplot](Images/2_3_a_bar_plot.png)
-    
-However, bar plot can be customized to view data in different ways. For example, instead of displaying frequencies on the Y-axis, relative frequencies can be displayed instead
-![Relative Frequency Barplot](Images/2_3_b_bar_plot.png)
-Also, bars cab via stacked above each other to show cumulative distribution along with regular distribution
-![Frequency Stacked Barplot](Images/2_3_c_bar_plot.png)
+
+However, bar plot can be customized to view data in different ways. For example, instead of displaying frequencies on the Y-axis, relative frequencies can be displayed instead ![Relative Frequency Barplot](Images/2_3_b_bar_plot.png) Also, bars cab via stacked above each other to show cumulative distribution along with regular distribution ![Frequency Stacked Barplot](Images/2_3_c_bar_plot.png)
 
 ![RelativeFrequency Stacked Barplot](Images/2_3_d_bar_plot.png)
 
@@ -238,28 +257,24 @@ Also, bars cab via stacked above each other to show cumulative distribution alon
 (check Ch2_2.3.R for generating the above charts)
 
 #### Histogram
+
 Histogram idea is very similar to **Bar Plot** but for numerical data (continues and discrete). Mainly the data is divided into multiple intervals (bins). Each bin is represented by its own bar. Bar height represents the frequency for the data within that interval
 
 Using `canvasXpress`, analyzer can control number of bins and/or bin width. Also analyzer can change the bars into dotplot to display *Relative Frequency* and many other options that can be explored bt visiting https://canvasxpress.org/examples/histogram.html
 
-The following are histogram examples (check Ch2_2.4.R for generating the below charts)
-![Histogram](Images/2_4_a_hist_plot.png)
-![Histogram Dot plot](Images/2_4_b_hist_plot.png)
+The following are histogram examples (check Ch2_2.4.R for generating the below charts) ![Histogram](Images/2_4_a_hist_plot.png) ![Histogram Dot plot](Images/2_4_b_hist_plot.png)
 
 #### Density Plot
+
 Another representation for numerical data but with smother look and feel as there is no need to partition data artificially into bins. `canvasXpress` has many features to control density plot. Also analyzer can show both histogram and density plot in the same plot.
 
-The following are density plot examples (check Ch2_2.5.R for generating the below charts)
-![Histogram](Images/2_5_a_densityt_plot.png)
-![Histogram](Images/2_5_b_densityt_plot.png)
+The following are density plot examples (check Ch2_2.5.R for generating the below charts) ![Histogram](Images/2_5_a_densityt_plot.png) ![Histogram](Images/2_5_b_densityt_plot.png)
 
 #### Boxplot
-One of the best methods to describe numerical feature measure tendency and dispersion is **Boxplot**.
-It shows median, quartiles, minimum, maximum, and outlier values in the same plot easily, these info can be displayed via plot tooltop upon hovering on the box.
 
-The following are histogram examples (check Ch2_2.6.R for generating the below charts)
-![Boxplot](Images/2_6_a_box_plot.png)
-![Boxplot tooltip](Images/2_6_b_box_plot.png)
+One of the best methods to describe numerical feature measure tendency and dispersion is **Boxplot**. It shows median, quartiles, minimum, maximum, and outlier values in the same plot easily, these info can be displayed via plot tooltop upon hovering on the box.
+
+The following are histogram examples (check Ch2_2.6.R for generating the below charts) ![Boxplot](Images/2_6_a_box_plot.png) ![Boxplot tooltip](Images/2_6_b_box_plot.png)
 
 ## Module Design
 
