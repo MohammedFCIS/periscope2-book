@@ -20,7 +20,7 @@ Hence, module input will be any data set (data.frame in `R`) and the output will
 Check @fig-2_1 for module objective summary. 
 
 ```{mermaid}
-%%| fig-cap: "Figure 2.1: Feature Analyzer Module (FAM) Objective"
+%%| fig-cap: "Feature Analyzer Module (FAM) Objective"
 %%| fig-width: 8 
 %%| label: fig-2_1
 flowchart LR
@@ -71,7 +71,9 @@ There are multiple data types for storing data in `R` (i.e matrix, tibbles, tabl
 
 On the other hand, data can be loaded into `R` using multiple functions in base `R` (i.e `?read.csv`, `?read.tsv`) or in extended packages (i.e `?readr::read_csv` package) and discussing that in details is beyond this book scope. Lucky us, base R comes with many available datasets in `datasets` base package, in which will be used through out this chapter. To know more about available datasets check `library(help = "datasets")`
 
-## Features Data Types
+## Module Functions
+
+### Identify Features Data Types
 
 To analyze data features and extract useful insights from it, we need to understand its nature and type to analyze it correctly and since features can be considered data descriptors, they can be anything and have any type. However, we can classify any feature type into two main groups:
 
@@ -86,11 +88,33 @@ In contrast, Simple feature is any feature that can be directly classified, meas
 
 -   Discrete
 
--   Continuous Figure (2.1) summarizes these types (check snippet 2.1 for generating below tree)
+-   Continuous
 
-    ![Features Classifications](Images/2_1_Features_Classification.png)
+Check @fig-2_2 for features types summary
 
-In next sections, we will discuss these types in more detail and discuss how to analyze them using R
+```{mermaid}
+%%| fig-cap: "Features Types"
+%%| fig-width: 7
+%%| label: fig-2_2
+flowchart TD
+  A[Feature Type]
+  A  --> B[Complex]
+  A  --> C[Simple]
+  
+  B  --> B1[Video]
+  B  --> B2[Image]
+  B  --> B3[Audio]
+  
+  C  --> C1[Categorical]
+  C  --> C2[Numerical]
+  
+  C2 --> C21[Discrete]
+  C2 --> C22[Continuous]
+  C1 --> C11[Nominal]
+  C1 --> C12[Ordinal]
+```
+
+In next sections, we will discuss these types in more detail and discuss how to analyze them using **FAM** module
 
 #### Categorical
 
