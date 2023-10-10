@@ -116,7 +116,7 @@ flowchart TD
 
 In next sections, we will discuss these types in more detail and discuss how to analyze them using **FAM** module
 
-#### Categorical
+#### Categorical Feature
 
 Categorical feature is data that cannot be measured with numbers and have finite number of categories or distinct groups (i.e gender, race, language, etc..), However, it still can take numeric *form* (i.e age groups, weight groups, etc..).
 
@@ -125,7 +125,57 @@ Categorical data can be classified into two sub types:
 -   **Nominal** in which categories order is not important and means nothing (i.e gender, nationality, eye color, etc..)
 -   **Ordinal** in which categories order is important such as measurements in general (low, middle, high), grades (A, B, C, ..) Days of the week (Saturday, Sunday, ..)
 
-#### Discrete
+However, as order will not affect statistical measurements, it won't concern us here.
+
+##### Identifying Categorical Feature
+
+Categorical feature can be represented in `R` via datatype `factor` and can be identified easily using `class` method, for example:
+
+```{r}
+class(iris$Species)
+```
+
+and we can know the unique values by calling `levels` method on `R` factors
+
+```{r}
+levels(iris$Species)
+```
+However, not all categorical values are defined as factors, they can have `character` or `numerical` datatypes for example the following features have a finite number of categories but they are not identified as `factor`:
+
+```{r}
+class(mtcars$cyl)
+class(letters)
+```
+In that case, FAM compares the number of unique values against configurable threshold to determine if this feature will be treated as a categorical feature or not. Check @fig-2_3 for identifying categorical feature algorithm
+
+```{mermaid}
+%%| fig-cap: "Identifying Categorical Feature Algorithm"
+%%| fig-width: 4
+%%| label: fig-2_3
+flowchart TD
+  S(start)
+  S  --> P1(Check feature using `class` function)
+  P1 --> C1{Is it factor?}
+  
+  C1 --> |Yes| D1[categorical feature]
+  D1 --> E(end)
+  
+  C1 --> |No| C2{"unique values count is
+                 greater than
+                 categories threshold?"}
+  C2 --> |Yes| E3(end)
+  C2 --> |No| C3{"unique values count is
+                 greater than 1?"}
+  C3 --> |No| E2(end)
+  C3 --> |Yes| D3[categorical feature]
+  D3 --> E2(end)
+  
+```
+
+#### Numerical Features
+By reviewing @fig-2_2, we know that numerical features can either be **Discrete** or **Continuous**
+
+##### Discrete Feature
 
 Discrete feature is a numeric feature with finite and countable number of values between any two values, such as:
 
@@ -133,7 +183,7 @@ Discrete feature is a numeric feature with finite and countable number of values
 -   Employees age
 -   Weather degrees for a month
 
-#### Continues
+##### Continues Feature
 
 Continues feature is a numeric feature with an infinite and uncountable number of values between any two variables, such as:
 
@@ -141,9 +191,43 @@ Continues feature is a numeric feature with an infinite and uncountable number o
 -   Daily rain volume in a certain area during in predefined duration
 -   Yearly volume of Nile flow
 
+##### Identifying Numerical Features
+Both numerical features can be mapped into `numeric` data type in `R`and to be more specific `Discreate` features can be mapped to `integer` datatype while continuous feature can be mapped to `double` type.
+
+However, that distinction can be tricky in `R` using either `class` or `typeof` functions, check:
+
+```{r}
+paste(class(1), class(1.0), class(1L))
+paste(typeof(1), typeof(1.0), typeof(1L))
+```
+So, **FAM** distinguishes between both features by their definition as discrete feature have integer values where continuous feature is otherwise, check @fig-2_4
+
+```{mermaid}
+%%| fig-cap: "Identifying Numerical Feature Algorithm"
+%%| fig-width: 4
+%%| label: fig-2_4
+flowchart TD
+  S(start)
+  S  --> C1{is it categorical feature?}
+  
+  C1 --> |Yes| E(end)
+  
+  C1 --> |No| C2{is feature Numerical?}
+  C2 --> |No| E2(end)
+  
+  C2 --> |Yes| C3{is feature Integer?}
+  
+  C3 --> |Yes| D1[Discrete Feature]
+  D1 --> E3(end)
+  
+  C3 --> |No| D2[Continuous Feature]
+  D2 --> E3
+  
+```
+
 ### Features Central Tendency Measures and Dispersion
 
-Normally, data collections have hundreds to thousands of observations for its different features. Hence, to understand this amount of data and extract decision making supporting insights, we need to use different statistical methods to summarize data and know its dispersion. In next sections, the most FAMous features tendency measures and dispersion will be discussed in brief and how we can use them in `R`
+Normally, data collections have hundreds to thousands of observations for its different features. Hence, to understand this amount of data and extract decision making supporting insights, we need to use different statistical methods to summarize data and know its dispersion. In next sections, the most Famous features tendency measures and dispersion will be discussed in brief and how we can use them in `R`
 
 #### Central Tendency Measures
 
