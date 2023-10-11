@@ -9,7 +9,9 @@ The module aims to help data analyzers to understand their data better by:
 -   visualizing data features correctly to get more insights (data visualization),
 -   and understanding the relation among features and each other (correlation).
 
-*Note: Correlation among features will be discussed in more details in next chapter.*
+::: {.callout-note}
+Correlation among features will be discussed in more details in next chapter.
+:::
 
 Hence, module input will be any data set (data.frame in `R`) and the output will be up-to-certain limit an interactive report that displays:
 
@@ -225,20 +227,21 @@ flowchart TD
   
 ```
 
-### Features Central Tendency Measures and Dispersion
+### Calculate feature statistical summary
+Second **FAM** function is calculating feature statistical summary after its type being identified, review @fig-2_1.
 
-Normally, data collections have hundreds to thousands of observations for its different features. Hence, to understand this amount of data and extract decision making supporting insights, we need to use different statistical methods to summarize data and know its dispersion. In next sections, the most Famous features tendency measures and dispersion will be discussed in brief and how we can use them in `R`
+Normally, data collections have hundreds to thousands of observations for its different features, which makes inspecting features observations manually is pointless and waste of time. Hence come the importance of calculating feature statistical summary to understand this amount of data and to extract decision making supporting insights.
 
-#### Central Tendency Measures
+In next sections, we will discuss how **FAM** will implement different statistical methods to summarize data and know its dispersion for different features. 
+
+#### Calculate Central Tendency Measures
 
 A measure of central tendency is a feature data *average/center* value. The most common measures of central tendency methods are:
 
--   The arithmetic mean
--   The median
--   Quantiles
+-   The arithmetic mean (numerical feature only)
+-   The median (numerical feature only)
+-   Quantiles (numerical feature only)
 -   The mode
-
-In next subsection, each method will be discussed briefly with an `R` example if applicable
 
 ##### Arithmetic Mean
 
@@ -248,7 +251,7 @@ $$
 \bar{x}  = \frac{1}{n} \sum_{i = 1}^{n}{x_i}
 $$
 
-and it can be calculated using `mean` function in `R`: Ex1: Mean height of `R` embedded dataset `tree` is:
+and it can be calculated using `mean` function in `R`
 
 ```{r}
 mean(trees$Height)
@@ -261,14 +264,16 @@ Median value is the value that divides feature data into two equal sets. The med
 -   If count of observations is odd, the median will be the middle value
 -   If count of observations is even, the median will be the mean of the middle two values
 
-*Note: feature observations need to be ordered before calculating the mean. Lucky us, `R` is doing that for us*
+:::{.callout-tip}
+Feature observations need to be ordered before calculating the mean. Lucky us, `R` is doing that for us
+:::
 
 $$
-    median = \begin{cases}
+    median = \begin{cases} 
               x_{\frac{n+1}{2}}  & \text{ if } n \text{is odd} \\
               \frac{1}{2}(x_{\frac{n}{2}} + x_{\frac{n}{2} + 1}) & \text{otherwise}
           \end{cases}
-$$
+$$ 
 
 and it can be calculated using `median` function in `R`: Ex1: Median of height of`R` embedded dataset `tree` is:
 
@@ -276,7 +281,9 @@ and it can be calculated using `median` function in `R`: Ex1: Median of height o
 median(trees$Height)
 ```
 
-*Note: mean and median values happen to the same in the used dataset as it symmetrically distributed around its center, but that is not usually the case*
+::: {.callout-warning}
+Mean and Median values happen to the same in the used dataset as it symmetrically distributed around its center, but that is not usually the case
+:::
 
 ##### Quantiles
 
@@ -300,13 +307,27 @@ quantile(trees$Height)
 
 The most frequent value in feature observations called feature *mode*. Hence, the value can be calculated for any feature type.
 
-It cannot be directly calculate with `R`. Hence, a custom function to calculate mode value will be developed in the module later.
+It cannot be directly calculate with `R`. FAM uses custom algorithm for calculating the mode  check @fig-2_5
 
-#### Feature Dispersion
+```{mermaid}
+%%| fig-cap: "Calculating Feature Mode"
+%%| fig-width: 4
+%%| label: fig-2_5
+flowchart TD
+  S(start)
+  S  --> S1[Remove empty values from data]
+  S1 --> S2[Extract data unique values]
+  S2 --> S3[Calculate each unique value frequency]
+  S3 --> S4[Return the highest frequency associated values]
+  S4 --> E(end)
+  
+```
 
-Feature dispersion (or variability) is to know how feature data is spread out, to know if data is squeezed or scattered, to know if the data is homogenous or heterogeneous.
+#### Calculate Feature Dispersion
 
-The most FAMous methods to calculate dispersion are:
+Feature dispersion (or variability) is to know how feature data is spread out, to know if data is squeezed or scattered, to know if the data is homogeneous or heterogeneous.
+
+The most famous methods to calculate dispersion are:
 
 -   Range,
 -   Interquartile Range,
@@ -347,17 +368,54 @@ sd(trees$Height)
 sd(trees$Height) == sqrt(var(trees$Height))
 ```
 
-### Features Visualization
+### Visualize Features
 
-Numerical analysis is very important as discussed in previous section. However, a picture worthies more than a thousand word. Hence, presenting the feature visually in a chart helps to summarize the feature in a more easy-to-understand method to human brain. Moreover, using cavansXpress will allow us to show numerical analysis along with the visual analysis easily with the ability to switch between different charts without re-coding our chart, in addition to many other on-shelf features that were discussed in chapter 1.
+Numerical analysis is very important as discussed in previous section. However, a picture worthies more than a thousand word. Hence, **FAM** presents its third function to summarize feature data in a more easy-to-understand plot using [cavansXpress](https://canvasxpress.org/).
 
-In next sections, the most FAMous features graphical representations will be discussed in more details with examples on how to implement them using `R` and `canvasXpress` package.
+[cavansXpress](https://canvasxpress.org/) can present numerical analysis along with the other visual analysis tools with the ability to switch between different charts without re-coding our chart, in addition to many other on-shelf features that were discussed in chapter 1.
+
+In next sections, the **FAM** module implemented features graphical representations based on feature type
+
+:::{.callout-note}
+If you are using the html version of this book, you can enjoy canvasXpress plots features as right click menu and top bar menu
+:::
 
 #### Pie Chart
 
-The simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%
+The simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%, review @fig-2_6
 
-![Frequency Barplot](Images/2_2_a_pie_chart.png) ![Frequency Barplot](Images/2_2_b_pie_chart.png) (check Ch2_2.2.R for generating the above charts)
+::: {.content-visible when-format="html"}
+
+```{r, echo=FALSE, message=FALSE}
+#| label: fig-2_6
+#| fig-cap: "Pie Chart for Categorical Data"
+
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(canvasXpress)
+
+freq_data <- mtcars %>%
+    group_by(cyl) %>%
+    select(cyl) %>%
+    summarise(Frequency = n()) %>%
+    as.data.frame() %>%
+    column_to_rownames("cyl") %>%
+    rename(Cyl = Frequency)
+
+canvasXpress(
+    data             = freq_data,
+    graphOrientation = "vertical",
+    graphType        = "Pie",
+    title            = "mtcars Cyl Distribution"
+)
+```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+![Pie Chart for Categorical Data](Images/2_2_a_pie_chart.png){#fig-2_6 width=60%}
+:::
 
 #### Bar Plot
 
@@ -369,7 +427,9 @@ However, bar plot can be customized to view data in different ways. For example,
 
 ![RelativeFrequency Stacked Barplot](Images/2_3_d_bar_plot.png)
 
-*Note: if categories count is large, bar plot became so dense and might be hard to digest*
+:::{.callout-tip}
+If categories count is large, bar plot became so dense and might be hard to digest
+:::
 
 (check Ch2_2.3.R for generating the above charts)
 
