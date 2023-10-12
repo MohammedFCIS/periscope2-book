@@ -419,13 +419,89 @@ canvasXpress(
 
 #### Bar Plot
 
-Another method to visualize categorical data. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*.
+Another method to visualize categorical data. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*, review @fig-2_7
 
-![Frequency Barplot](Images/2_3_a_bar_plot.png)
+::: {.content-visible when-format="html"}
 
-However, bar plot can be customized to view data in different ways. For example, instead of displaying frequencies on the Y-axis, relative frequencies can be displayed instead ![Relative Frequency Barplot](Images/2_3_b_bar_plot.png) Also, bars cab via stacked above each other to show cumulative distribution along with regular distribution ![Frequency Stacked Barplot](Images/2_3_c_bar_plot.png)
+```{r, echo=FALSE, message=FALSE}
+#| label: fig-2_7
+#| fig-cap: "Different Bar Chart Views for mtcars Cyl Categorical Features Data"
+#| layout-nrow: 2
+#| fig-subcap:
+#|   - Absolute Frequencies
+#|   - Relative Frequencies#|   
+#|   - Absolute Stacked Frequencies
+#|   - Relative Stacked Frequencies
 
-![RelativeFrequency Stacked Barplot](Images/2_3_d_bar_plot.png)
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(canvasXpress)
+
+freq_data <- mtcars %>%
+    group_by(cyl) %>%
+    select(cyl) %>%
+    summarise(Frequency = n()) %>%
+    as.data.frame() %>%
+    column_to_rownames("cyl") %>%
+    rename(Cyl = Frequency)
+
+rel_freq_data <- freq_data %>%
+    mutate(Cyl = round(100 * Cyl/sum(Cyl), 0))
+
+canvasXpress(
+    data             = freq_data,
+    graphOrientation ="vertical",
+    graphType        = "Bar",
+    smpLabelRotate   = 90,
+    title            = "Barplot Cyl Distribution",
+    xAxisTitle       = "Distribution"
+)
+
+canvasXpress(
+    data             = rel_freq_data,
+    graphOrientation ="vertical",
+    graphType        = "Bar",
+    smpLabelRotate   = 90,
+    title            = "Barplot Cyl Relative Distribution",
+    xAxisTitle       = "Distribution(%)"
+)
+
+canvasXpress(
+    data             = freq_data,
+    graphOrientation ="vertical",
+    graphType        = "Stacked",
+    smpLabelRotate   = 90,
+    title            = "Stacked Cyl Distribution",
+    xAxisTitle       = "Distribution"
+)
+
+canvasXpress(
+    data             = rel_freq_data,
+    graphOrientation ="vertical",
+    graphType        = "StackedPercent",
+    smpLabelRotate   = 90,
+    title            = "Stacked Cyl Relative Distribution",
+    xAxisTitle       = "Distribution(%)"
+)
+```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {#fig-2_7 layout-nrow=2}
+![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_6a width=48%}
+![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_6b width=48%}
+![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_6c width=48%}
+![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_6d width=48%}
+
+Different Bar Chart Views for mtcars Cyl Categorical Features Data 
+
+:::
+:::
+
+
+However, bar plot can be customized to view data in different ways. For example, instead of displaying frequencies on the Y-axis, relative frequencies can be displayed instead.  Also, bars cab via stacked above each other to show cumulative distribution along with regular distribution 
 
 :::{.callout-tip}
 If categories count is large, bar plot became so dense and might be hard to digest
