@@ -429,7 +429,7 @@ Another method to visualize categorical data. Usually, each category is represen
 #| layout-nrow: 2
 #| fig-subcap:
 #|   - Absolute Frequencies
-#|   - Relative Frequencies#|   
+#|   - Relative Frequencies   
 #|   - Absolute Stacked Frequencies
 #|   - Relative Stacked Frequencies
 
@@ -490,10 +490,14 @@ canvasXpress(
 
 ::: {.content-visible when-format="pdf"}
 ::: {#fig-2_7 layout-nrow=2}
-![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_6a width=48%}
-![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_6b width=48%}
-![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_6c width=48%}
-![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_6d width=48%}
+
+![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_7a width=48%}
+
+![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_7b width=48%}
+
+![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_7c width=48%}
+
+![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_d width=48%}
 
 Different Bar Chart Views for mtcars Cyl Categorical Features Data 
 
@@ -507,21 +511,129 @@ However, bar plot can be customized to view data in different ways. For example,
 If categories count is large, bar plot became so dense and might be hard to digest
 :::
 
-(check Ch2_2.3.R for generating the above charts)
-
 #### Histogram
 
 Histogram idea is very similar to **Bar Plot** but for numerical data (continues and discrete). Mainly the data is divided into multiple intervals (bins). Each bin is represented by its own bar. Bar height represents the frequency for the data within that interval
 
 Using `canvasXpress`, analyzer can control number of bins and/or bin width. Also analyzer can change the bars into dotplot to display *Relative Frequency* and many other options that can be explored bt visiting https://canvasxpress.org/examples/histogram.html
 
-The following are histogram examples (check Ch2_2.4.R for generating the below charts) ![Histogram](Images/2_4_a_hist_plot.png) ![Histogram Dot plot](Images/2_4_b_hist_plot.png)
+The following are histogram examples, review @fig-2_8
+
+::: {.content-visible when-format="html"}
+
+```{r, echo=FALSE, message=FALSE}
+#| label: fig-2_8
+#| fig-cap: "Different Histogram Chart Views for mtcars MPG Numerical Features Data"
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - Histogram
+#|   - Histogram Dot plot
+
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(canvasXpress)
+
+canvasXpress(
+    data              = data.frame(mpg = mtcars$mpg),
+    graphType         = "Scatter2D",
+    #histogramBins    = 5, # number of intervals
+    histogramBinWidth = 3, #interval width
+    title             = "MPG Histogram",
+    xAxisTitle        = "MPG",
+    yAxisTitle        = "Frequency",
+    showLegend        = FALSE,
+    histogramData     = TRUE
+)
+
+canvasXpress(
+    data               = data.frame(mpg = mtcars$mpg),
+    graphType          = "Scatter2D",
+    histogramAsDotplot = TRUE,
+    histogramBinWidth  = 3, #interval width
+    title              = "MPG Histogram as DotPlot",
+    xAxisTitle         = "MPG",
+    yAxisTitle         = "Frequency",
+    showLegend         = FALSE,
+    histogramData      = TRUE
+)
+```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {#fig-2_8 layout-ncol=2}
+![Histogram](Images/2_4_a_hist_plot.png){#fig-2_8a width=48%}
+
+![Histogram Dot plot](Images/2_4_b_hist_plot.png){#fig-2_8b width=48%}
+
+Different Histogram Chart Views for mtcars MPG Numerical Features Data
+
+:::
+:::
 
 #### Density Plot
 
 Another representation for numerical data but with smother look and feel as there is no need to partition data artificially into bins. `canvasXpress` has many features to control density plot. Also analyzer can show both histogram and density plot in the same plot.
 
-The following are density plot examples (check Ch2_2.5.R for generating the below charts) ![Histogram](Images/2_5_a_densityt_plot.png) ![Histogram](Images/2_5_b_densityt_plot.png)
+The following are density plot examples, review @fig-2_9
+
+::: {.content-visible when-format="html"}
+
+```{r, echo=FALSE, message=FALSE}
+#| label: fig-2_9
+#| fig-cap: "Different Density Chart Views for mtcars MPG Numerical Features Data"
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - regular density plot
+#|   - density plot showing mean value
+
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(canvasXpress)
+
+canvasXpress(
+    data                       = data.frame(mpg = mtcars$mpg),
+    graphType                  = "Scatter2D",
+    title                      = "MPG Histogram",
+    xAxisTitle                 = "MPG",
+    yAxisTitle                 = "Frequency",
+    showLegend                 = FALSE,
+    hideHistogram              = TRUE,
+    histogramData              = TRUE,
+    showHistogramDensity       = TRUE,
+    showFilledHistogramDensity = TRUE,
+    showHistogramMedian        = TRUE
+)
+
+canvasXpress(
+    data                 = data.frame(mpg = mtcars$mpg),
+    graphType            = "Scatter2D",
+    histogramBinWidth    = 3, #interval width
+    title                = "MPG Histogram as DotPlot",
+    xAxisTitle           = "MPG",
+    yAxisTitle           = "Frequency",
+    showLegend           = FALSE,
+    histogramData        = TRUE,
+    showHistogramDensity = TRUE,
+)
+
+
+```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {#fig-2_9 layout-ncol=2}
+![regular density plot](Images/2_5_a_densityt_plot.png){#fig-2_9a width=48%}
+
+![density plot showing mean value](Images/2_5_b_densityt_plot.png){#fig-2_9b width=48%}
+
+Different Density Chart Views for mtcars MPG Numerical Features Data
+
+:::
+:::
 
 #### Boxplot
 
