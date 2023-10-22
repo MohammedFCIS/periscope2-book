@@ -1,6 +1,7 @@
-# Feature Analyzer Module
+# Feature Analyzer Module (FAM)
 
-## Module Objective
+## Module Overview
+### Objective
 
 The module aims to help data analyzers to understand their data better by:
 
@@ -13,16 +14,26 @@ The module aims to help data analyzers to understand their data better by:
 Correlation among features will be discussed in more details in next chapter.
 :::
 
-Hence, module input will be any data set (data.frame in `R`) and the output will be up-to-certain limit an interactive report that displays:
+### Output
+Defining module output is essential part to identify module functions and input. Suggested FAM module output will be up-to-certain limit an interactive report that displays:
 
--   Data summary (number of features and number of observations)
--   Features type, properties and statistical summary
--   Features visualization
+- Data summary (number of features and number of observations)
+- Data features info:
+  - Features type, properties and statistical summary
+  - Features visualization
+  
+Discussing the UI design of module output will be in @sec-moduleUI
 
-Check @fig-2_1 for module objective summary. 
+### Input
+FAM module will have two different input types:
+
+- Data input: that will be any `R` data.frame object
+- Configurations input: that is list of configuration parameters to customize module default behavior and/or look and feel if needed
+
+Check @fig-2_1 for FAM module objective and IO summary
 
 ```{mermaid}
-%%| fig-cap: "Feature Analyzer Module (FAM) Objective"
+%%| fig-cap: "Feature Analyzer Module (FAM) Objective and IO"
 %%| fig-width: 8 
 %%| label: fig-2_1
 flowchart LR
@@ -38,18 +49,9 @@ flowchart LR
 ```
 
 
-Rest of this chapter will discuss module input, output and functions in more details while building it step by step
+Next sections will discuss what is data in the first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically?
 
-## Module Input
-Module will have two different input types:
-
-- Data input: as stated in @fig-2_1, that will be any `R` data.frame object
-- Configurations input: that is list of configuration parameters to customize module default behavior and/or look and feel if needed
-
-As data input is the main input, the next sections will discuss what is data in the first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically?
-
-
-### Data Definition
+#### Data Definition
 
 Data can be defined as a collection of observations or facts that describe an event or answer a question scientifically in order to make an informative decision later
 
@@ -67,11 +69,13 @@ Observations can be collected for one or more features to describe an event such
 
 Each feature gives an insight or different look into the data in which leads to an informative decision or answer at the end
 
-### Data in R
+#### Data in R
 
 There are multiple data types for storing data in `R` (i.e matrix, tibbles, tables, ...). However, the most commonly used data type is `data.format` and `tibbles` that extends `data.format` and these are the two types that will be used as an input for the module.
 
 On the other hand, data can be loaded into `R` using multiple functions in base `R` (i.e `?read.csv`, `?read.tsv`) or in extended packages (i.e `?readr::read_csv` package) and discussing that in details is beyond this book scope. Lucky us, base R comes with many available datasets in `datasets` base package, in which will be used through out this chapter. To know more about available datasets check `library(help = "datasets")`
+
+Rest of this chapter will discuss module functions and UI in more details while building it step by step
 
 ## Module Functions
 
@@ -382,7 +386,7 @@ If you are using the html version of this book, you can enjoy canvasXpress plots
 
 #### Pie Chart
 
-The simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%, review @fig-2_6
+[Pie Chart](https://canvasxpress.org/examples/pie-1.html) is the simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%, review @fig-2_6
 
 ::: {.content-visible when-format="html"}
 
@@ -418,7 +422,7 @@ canvasXpress(
 
 #### Bar Plot
 
-Another method to visualize categorical data. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*, review @fig-2_7
+[Bar Plot](https://canvasxpress.org/examples/bar-1.html) is another method to visualize categorical data, and the most famous. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*, review @fig-2_7-1 and @fig-2_7-2
 
 ::: {.content-visible when-format="html"}
 
@@ -486,13 +490,13 @@ canvasXpress(
 ::: {.content-visible when-format="pdf"}
 ::: {#fig-2_7 layout-nrow=2}
 
-![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_7a width=48%}
+![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_7-1 width=48%}
 
-![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_7b width=48%}
+![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_7-2 width=48%}
 
-![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_7c width=48%}
+![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_7-3 width=48%}
 
-![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_d width=48%}
+![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_7-4 width=48%}
 
 Different Bar Chart Views for mtcars Cyl Categorical Features Data 
 
@@ -500,19 +504,17 @@ Different Bar Chart Views for mtcars Cyl Categorical Features Data
 :::
 
 
-However, bar plot can be customized to view data in different ways. For example, instead of displaying frequencies on the Y-axis, relative frequencies can be displayed instead.  Also, bars cab via stacked above each other to show cumulative distribution along with regular distribution 
+There are other views for [Bar Plot](https://canvasxpress.org/examples/bar-1.html) like [Stacked Plots](https://canvasxpress.org/examples/stacked-1.html) and [Stacked Percent Plots](https://canvasxpress.org/examples/stackedpercent-1.html) where bars are stacked above each other to show cumulative distribution along with regular distribution, review @fig-2_7-3 and @fig-2_7-4 
 
 :::{.callout-tip}
-If categories count is large, bar plot became so dense and might be hard to digest
+If categories count is large, bar plot became so dense and might be hard to digest and Histogram plots can be used instead
 :::
 
 #### Histogram
 
-Histogram idea is very similar to **Bar Plot** but for numerical data (continues and discrete). Mainly the data is divided into multiple intervals (bins). Each bin is represented by its own bar. Bar height represents the frequency for the data within that interval
+[Histogram](https://canvasxpress.org/examples/histogram-1.html) idea is very similar to [Bar Plot](https://canvasxpress.org/examples/bar-1.html) but for numerical data (continues and discrete).Mainly the data is divided into multiple intervals (bins). Each bin is represented by its own bar. Bar height represents the frequency for the data within that interval
 
-Using `canvasXpress`, analyzer can control number of bins and/or bin width. Also analyzer can change the bars into dotplot to display *Relative Frequency* and many other options that can be explored bt visiting https://canvasxpress.org/examples/histogram.html
-
-The following are histogram examples, review @fig-2_8
+Using [canvasXpress](https://canvasxpress.org), analyzer can control number of bins and/or bin width. Also analyzer can change the bars into [Dot Plot](https://canvasxpress.org/examples/dotplot-1.html) to display *Relative Frequency*, @fig-2_8
 
 ::: {.content-visible when-format="html"}
 
@@ -566,9 +568,7 @@ Different Histogram Chart Views for mtcars MPG Numerical Features Data
 
 #### Density Plot
 
-Another representation for numerical data but with smother look and feel as there is no need to partition data artificially into bins. `canvasXpress` has many features to control density plot. Also analyzer can show both histogram and density plot in the same plot.
-
-The following are density plot examples, review @fig-2_9
+[Density Plot](https://canvasxpress.org/examples/density-1.html) is another representation for numerical data but with different look and feel as there is no need to partition data artificially into bins. [canvasXpress](https://canvasxpress.org) has many features to control density plot. Also analyzer can show both histogram and density plot in the same plot, review @fig-2_9
 
 ::: {.content-visible when-format="html"}
 
@@ -627,7 +627,7 @@ Different Density Chart Views for mtcars MPG Numerical Features Data
 
 #### Boxplot
 
-One of the best methods to describe numerical feature measure tendency and dispersion is **Boxplot**. It shows median, quartiles, minimum, maximum, and outlier values in the same plot easily, these info can be displayed via plot tooltip upon hovering on the box, review @fig-2_10
+One of the best methods to describe numerical feature measure tendency and dispersion is [Boxplot](https://canvasxpress.org/examples/boxplot-1.html). It shows median, quartiles, minimum, maximum, and outlier values in the same plot easily, these info can be displayed via plot tooltip upon hovering on the box, review @fig-2_10
 
 ::: {.content-visible when-format="html"}
 
@@ -660,7 +660,38 @@ canvasXpress(
 ![Boxplot for Numerical Feature](Images/2_6_a_box_plot.png){#fig-2_10 width=60%}
 :::
 
-## Module Output
+Before moving into module UI design, we can review module functions in review @fig-2_11
+
+```{mermaid}
+%%| fig-cap: "FAM Functions Summary"
+%%| fig-width: 7
+%%| label: fig-2_11
+stateDiagram-v2
+    FT   : Identify Feature Type
+    CA   : Categorical
+    NUM  : Numerical (Discrete/Continuous)
+    CAV  : "Visualization" <br/>Pie Chart<br/>Bar Plot
+    CAS  : "Statistical Summary" <br/>Mode
+    NUV  : "Visualization" <br/>Histogram<br/>Density Plot<br/>Boxplot
+    NUS  : "Statistical Summary"
+    NUS1 : "Central Tendency Measures"<br/>Mean<br/>Median<br/>Quantiles<br/>Mode
+    NUS2 : "Dispersion" <br/>Range<br/>Interquartile Range<br/>Variance<br/>Standard Deviation
+    
+    FT --> CA
+    FT --> NUM
+    
+    CA --> CAV
+    CA --> CAS
+    
+    NUM --> NUV
+    NUM --> NUS
+    
+    NUS --> NUS1
+    NUS --> NUS2
+
+```
+
+## Module UI {#sec-moduleUI}
 
 -   Data have to be wrangled
 -   This is a descriptive and analytically guide
