@@ -664,7 +664,7 @@ Before moving into module UI design, we can review module functions in review @f
 
 ```{mermaid}
 %%| fig-cap: "FAM Functions Summary"
-%%| fig-width: 7
+%%| fig-width: 5.5
 %%| label: fig-2_11
 stateDiagram-v2
     FT   : Identify Feature Type
@@ -693,39 +693,64 @@ stateDiagram-v2
 
 ## Module UI {#sec-moduleUI}
 
--   Data have to be wrangled
--   This is a descriptive and analytically guide
+I can only think of a few dozen ways to represent module UI and interactivity with the user, such as:
 
-### Univariate Descriptor Module
+- Module can generate full data report offline and make it downloadable to user
+- Or it can be a shiny page with all features information
 
-#### Categorical
+In order to make it more easy for us to design out module UI, let us start by how module user (the user shiny app) will interact with it and how it will send required data and configurations to it and how it will embed module output in app UI in general. The most important step is to define UI sequence diagram, then implement the behaviour using any UI arrangements and controls you like, review @fig-2_12.
 
-##### ID
+```{mermaid}
+%%| fig-cap: "FAM Usage Sequence Diagram"
+%%| fig-width: 5.5
+%%| label: fig-2_12
+%%| fig-cap-location: top
 
--   Distinct values for each observation
--   No plot and no statistical description
+sequenceDiagram
+  actor CSA as Client Shiny App
+  participant FAMS as FAM Server
+  participant FAMU as FAM UI
+  
+  CSA  ->>  FAMS: Send Reactive data.frame
+  FAMS ->>  FAMS: Identify observations and features Stat.
+  FAMS -->> FAMU: Render observations <br/> and features Stat.
+  FAMS ->>  FAMS: Identify feature types
+  FAMS -->> FAMU: Populate features dropdown <br/> with identified features types
+  CSA  ->>  FAMU: Select feature
+  FAMU -->> FAMU: Activate related feature <br/> type configuration inputs
+  CSA  ->>  FAMU: Select feature related configuration Inputs
+  CSA  ->>  FAMU: Click "Analyze Feature" button
+  FAMU -->> FAMS: Send selected feature <br/> along with selected configurations
+  FAMS -->> FAMU: Render feature output <br/> with stat and CX empty slots
+  FAMS ->>  FAMS: Calculate statistical summary
+  FAMS -->> FAMU: Render statistical info
+  FAMS ->>  FAMS: Visualize feature data
+  FAMS -->> FAMU: Render canvasXpress plot
+  
+```
 
-##### Factor
 
-Unique values less that configurable number (default = 5) and unique values does not equal number of observations
+A sample of analyzed feature sample can be reviewed in @fig-2_13 
 
-##### Character
+![Feature Analysis Sample](Images/2_7_feature_analysis.png){#fig-2_13} 
 
--   Anything that is neither ID nor factor
--   No plot and no statistical description (?)
 
-#### Numerical
+::: {.callout-note}
+That is a simple suggestion for single feature analysis. You implementation could different and definitely will be more awesome 
+:::
 
--   Date
--   Integer
--   Double
 
-#### Requirements
+::: {.callout-note}
+The complete module solution can be found in book solutions GitHub
+:::
 
--   Define variable type
--   Define variable measures
--   Define variable plot
 
-### Dataset Descriptor Module
 
 ## Excerises
+
+1. Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
+
+1. Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+
+1. In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic–geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
+
