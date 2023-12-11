@@ -34,9 +34,9 @@ Check @fig-2_1 for FAM module objective and IO summary
 
 ```{mermaid}
 %%| fig-cap: "Feature Analyzer Module (FAM) Objective and IO"
-%%| fig-width: 8 
+%%| fig-width: 3 
 %%| label: fig-2_1
-flowchart LR
+flowchart TD
   A[R data.frame] --> C>"Feature Analyzer Module
   - Identify feature type
   - Calculate feature statistical summary
@@ -100,7 +100,7 @@ Check @fig-2_2 for features types summary
 
 ```{mermaid}
 %%| fig-cap: "Features Types"
-%%| fig-width: 7
+%%| fig-width: 4.5
 %%| label: fig-2_2
 flowchart TD
   A[Feature Type]
@@ -156,7 +156,7 @@ In that case, FAM compares the number of unique values against configurable thre
 
 ```{mermaid}
 %%| fig-cap: "Identifying Categorical Feature Algorithm"
-%%| fig-width: 4
+%%| fig-width: 3
 %%| label: fig-2_3
 flowchart TD
   S(start)
@@ -210,7 +210,7 @@ So, **FAM** distinguishes between both features by their definition as discrete 
 
 ```{mermaid}
 %%| fig-cap: "Identifying Numerical Feature Algorithm"
-%%| fig-width: 4
+%%| fig-width: 3
 %%| label: fig-2_4
 flowchart TD
   S(start)
@@ -664,7 +664,7 @@ Before moving into module UI design, we can review module functions in review @f
 
 ```{mermaid}
 %%| fig-cap: "FAM Functions Summary"
-%%| fig-width: 5.5
+%%| fig-width: 5
 %%| label: fig-2_11
 stateDiagram-v2
     FT   : Identify Feature Type
@@ -702,7 +702,7 @@ In order to make it more easy for us to design out module UI, let us start by ho
 
 ```{mermaid}
 %%| fig-cap: "FAM Usage Sequence Diagram"
-%%| fig-width: 5.5
+%%| fig-width: 5.2
 %%| label: fig-2_12
 %%| fig-cap-location: top
 

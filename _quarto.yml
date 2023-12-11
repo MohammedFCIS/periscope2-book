@@ -27,8 +27,10 @@ format:
     theme: cosmo
     number-depth: 3
   pdf:
-    documentclass: scrreprt
+    documentclass: krantz
     number-depth: 3
+    mermaid:
+      theme: neutral
   gfm:
     mermaid-format: png
 
