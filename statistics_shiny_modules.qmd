@@ -1,34 +1,33 @@
 # Feature Analyzer Module (FAM)
 
-## Module Overview
-### Objective
+The key to take an informative decision in business, scientific research or even an important aspect in the life, is to understand the related data and what patterns and trends in this data. Hence come the importance of *Feature Analyzer Module (FAM)* to identify data features and understand each feature nature, pattern and trend statistically and visually.
 
-The module aims to help data analyzers to understand their data better by:
+## Introduction
 
--   identifying data features and understanding each feature nature (data feature type),
--   understanding feature distribution over data observations (central tendency and dispersion),
--   visualizing data features correctly to get more insights (data visualization),
--   and understanding the relation among features and each other (correlation).
+Before diving developing FAM, or any other module, developer would need to define three things:
 
-::: {.callout-note}
-Correlation among features will be discussed in more details in next chapter.
-:::
+-   What precisely this module will do (module functions)
+-   What each function needs to perform its functionality properly (module input)
+-   How each function will be presented to module user or to other modules (module output)
 
-### Output
-Defining module output is essential part to identify module functions and input. Suggested FAM module output will be up-to-certain limit an interactive report that displays:
+The above three points will be discussed briefly in next subsections from FAM point of view
 
-- Data summary (number of features and number of observations)
-- Data features info:
-  - Features type, properties and statistical summary
-  - Features visualization
-  
-Discussing the UI design of module output will be in @sec-moduleUI
+### Functions
+
+FAM main function is to define data features and and their behavior. This function can be broken down into the following sub-functions:
+
+-   validating data and identifying its features and observations (@sec-data),
+-   identifying data features and understanding each feature nature (@sec-IFDT),
+-   understanding feature distribution over data observations (@sec-cfss),
+-   visualizing data features correctly to get more insights (@sec-visualization)
 
 ### Input
-FAM module will have two different input types:
 
-- Data input: that will be any `R` data.frame object
-- Configurations input: that is list of configuration parameters to customize module default behavior and/or look and feel if needed
+FAM module have two different input types:
+
+-   Data input: that will be any `R` data.frame object
+-   Configurations input: that is list of configuration parameters that are needed for each FAM function
+    -   These parameters will be defined through the journey of building module different functions
 
 Check @fig-2_1 for FAM module objective and IO summary
 
@@ -49,11 +48,24 @@ flowchart TD
 ```
 
 
-Next sections will discuss what is data in the first place? what are data features? and what is the difference between the data features and data observations? and what are the available features types and how to measure them statistically?
+### Output
 
-#### Data Definition
+Defining module output is essential part to identify module functions and input. FAM module output will be a report that displays:
 
-Data can be defined as a collection of observations or facts that describe an event or answer a question scientifically in order to make an informative decision later
+-   Data summary (features count and observations count)
+-   Data features info:
+    -   Features type, properties and statistical summary
+    -   Features visualization
+
+Discussing each function output or UI design will be part of each function building steps
+
+check commit ?? for implemented function
+
+## Data Summarization {#sec-data}
+
+### Definition
+
+Data can be defined as a collection of observations or facts that describe an event or a fact in order to make an informative decision later
 
 Examples for that can be:
 
@@ -69,17 +81,50 @@ Observations can be collected for one or more features to describe an event such
 
 Each feature gives an insight or different look into the data in which leads to an informative decision or answer at the end
 
-#### Data in R
+### Function Design
 
-There are multiple data types for storing data in `R` (i.e matrix, tibbles, tables, ...). However, the most commonly used data type is `data.format` and `tibbles` that extends `data.format` and these are the two types that will be used as an input for the module.
+#### Input
 
-On the other hand, data can be loaded into `R` using multiple functions in base `R` (i.e `?read.csv`, `?read.tsv`) or in extended packages (i.e `?readr::read_csv` package) and discussing that in details is beyond this book scope. Lucky us, base R comes with many available datasets in `datasets` base package, in which will be used through out this chapter. To know more about available datasets check `library(help = "datasets")`
+Since the most commonly used data types to store data in `R ` are `data.format` and `tibbles` types,  these are the two types that will be used as an input for the **FAM** module. 
 
-Rest of this chapter will discuss module functions and UI in more details while building it step by step
+#### Output
 
-## Module Functions
+Function output is either:
 
-### Identify Features Data Types
+- data features count and observations count
+- or error message if the data is invalid or has invalid data type
+
+#### Workflow
+
+Check figure @fig-2_2 for function workflow
+
+```{mermaid}
+%%| fig-cap: "Data Summarization workflow"
+%%| fig-width: 4.5
+%%| label: fig-2_2
+sequenceDiagram
+  actor User as FAM Module User
+  participant FAMS as FAM Server
+  participant FAMU as FAM UI
+  
+  User ->> FAMS: Send data object
+  FAMS ->>  FAMS: Validate data object
+    alt valid data
+        FAMS -->> FAMU: Send data summary info
+        FAMU ->> User: Display data summary info
+        FAMS ->>  FAMS: Perform other module functions
+    else invalid data
+        FAMS -->> FAMU: Send error message
+        FAMU ->> User: Display user error message
+    end
+  
+```
+
+#### UI
+
+periscope alerts and logs
+
+## Features Types Identification {#sec-IFDT}
 
 To analyze data features and extract useful insights from it, we need to understand its nature and type to analyze it correctly and since features can be considered data descriptors, they can be anything and have any type. However, we can classify any feature type into two main groups:
 
@@ -96,12 +141,12 @@ In contrast, Simple feature is any feature that can be directly classified, meas
 
 -   Continuous
 
-Check @fig-2_2 for features types summary
+Check @fig-2_22 for features types summary
 
 ```{mermaid}
 %%| fig-cap: "Features Types"
 %%| fig-width: 4.5
-%%| label: fig-2_2
+%%| label: fig-2_22
 flowchart TD
   A[Feature Type]
   A  --> B[Complex]
@@ -122,7 +167,7 @@ flowchart TD
 
 In next sections, we will discuss these types in more detail and discuss how to analyze them using **FAM** module
 
-#### Categorical Feature
+### Categorical Feature
 
 Categorical feature is data that cannot be measured with numbers and have finite number of categories or distinct groups (i.e gender, race, language, etc..), However, it still can take numeric *form* (i.e age groups, weight groups, etc..).
 
@@ -133,7 +178,7 @@ Categorical data can be classified into two sub types:
 
 However, as order will not affect statistical measurements, it won't concern us here.
 
-##### Identifying Categorical Feature
+#### Identifying Categorical Feature
 
 Categorical feature can be represented in `R` via datatype `factor` and can be identified easily using `class` method, for example:
 
@@ -146,12 +191,14 @@ and we can know the unique values by calling `levels` method on `R` factors
 ```{r}
 levels(iris$Species)
 ```
+
 However, not all categorical values are defined as factors, they can have `character` or `numerical` datatypes for example the following features have a finite number of categories but they are not identified as `factor`:
 
 ```{r}
 class(mtcars$cyl)
 class(letters)
 ```
+
 In that case, FAM compares the number of unique values against configurable threshold to determine if this feature will be treated as a categorical feature or not. Check @fig-2_3 for identifying categorical feature algorithm
 
 ```{mermaid}
@@ -178,10 +225,11 @@ flowchart TD
   
 ```
 
-#### Numerical Features
+### Numerical Features
+
 By reviewing @fig-2_2, we know that numerical features can either be **Discrete** or **Continuous**
 
-##### Discrete Feature
+#### Discrete Feature
 
 Discrete feature is a numeric feature with finite and countable number of values between any two values, such as:
 
@@ -189,7 +237,7 @@ Discrete feature is a numeric feature with finite and countable number of values
 -   Employees age
 -   Weather degrees for a month
 
-##### Continues Feature
+#### Continues Feature
 
 Continues feature is a numeric feature with an infinite and uncountable number of values between any two variables, such as:
 
@@ -197,7 +245,8 @@ Continues feature is a numeric feature with an infinite and uncountable number o
 -   Daily rain volume in a certain area during in predefined duration
 -   Yearly volume of Nile flow
 
-##### Identifying Numerical Features
+#### Identifying Numerical Features
+
 Both numerical features can be mapped into `numeric` data type in `R`and to be more specific `Discreate` features can be mapped to `integer` datatype while continuous feature can be mapped to `double` type.
 
 However, that distinction can be tricky in `R` using either `class` or `typeof` functions, check:
@@ -206,6 +255,7 @@ However, that distinction can be tricky in `R` using either `class` or `typeof` 
 paste(class(1), class(1.0), class(1L))
 paste(typeof(1), typeof(1.0), typeof(1L))
 ```
+
 So, **FAM** distinguishes between both features by their definition as discrete feature have integer values where continuous feature is otherwise, check @fig-2_4
 
 ```{mermaid}
@@ -231,14 +281,15 @@ flowchart TD
   
 ```
 
-### Calculate feature statistical summary
+## Feature Statistical Calculation {#sec-cfss}
+
 Second **FAM** function is calculating feature statistical summary after its type being identified, review @fig-2_1.
 
 Normally, data collections have hundreds to thousands of observations for its different features, which makes inspecting features observations manually is pointless and waste of time. Hence come the importance of calculating feature statistical summary to understand this amount of data and to extract decision making supporting insights.
 
-In next sections, we will discuss how **FAM** will implement different statistical methods to summarize data and know its dispersion for different features. 
+In next sections, we will discuss how **FAM** will implement different statistical methods to summarize data and know its dispersion for different features.
 
-#### Calculate Central Tendency Measures
+### Central Tendency Measures Calculation
 
 A measure of central tendency is a feature data *average/center* value. The most common measures of central tendency methods are:
 
@@ -247,7 +298,7 @@ A measure of central tendency is a feature data *average/center* value. The most
 -   Quantiles (numerical feature only)
 -   The mode
 
-##### Arithmetic Mean
+#### Arithmetic Mean
 
 **Arithmetic Mean** is simply the data average as follow:
 
@@ -261,14 +312,14 @@ and it can be calculated using `mean` function in `R`
 mean(trees$Height)
 ```
 
-##### Median
+#### Median
 
 Median value is the value that divides feature data into two equal sets. The median calculated differently based on observations count as follow:
 
 -   If count of observations is odd, the median will be the middle value
 -   If count of observations is even, the median will be the mean of the middle two values
 
-:::{.callout-tip}
+::: callout-tip
 Feature observations need to be ordered before calculating the mean. Lucky us, `R` is doing that for us
 :::
 
@@ -277,7 +328,7 @@ $$
               x_{\frac{n+1}{2}}  & \text{ if } n \text{is odd} \\
               \frac{1}{2}(x_{\frac{n}{2}} + x_{\frac{n}{2} + 1}) & \text{otherwise}
           \end{cases}
-$$ 
+$$
 
 and it can be calculated using `median` function in `R`: Ex1: Median of height of`R` embedded dataset `tree` is:
 
@@ -285,11 +336,11 @@ and it can be calculated using `median` function in `R`: Ex1: Median of height o
 median(trees$Height)
 ```
 
-::: {.callout-warning}
+::: callout-warning
 Mean and Median values happen to the same in the used dataset as it symmetrically distributed around its center, but that is not usually the case
 :::
 
-##### Quantiles
+#### Quantiles
 
 If we need to divide data into more partitions than just two then we use quantiles, for example:
 
@@ -307,11 +358,11 @@ Quantiles have special values as follow:
 quantile(trees$Height)
 ```
 
-##### Mode
+#### Mode
 
 The most frequent value in feature observations called feature *mode*. Hence, the value can be calculated for any feature type.
 
-It cannot be directly calculate with `R`. FAM uses custom algorithm for calculating the mode  check @fig-2_5
+It cannot be directly calculate with `R`. FAM uses custom algorithm for calculating the mode check @fig-2_5
 
 ```{mermaid}
 %%| fig-cap: "Calculating Feature Mode"
@@ -327,7 +378,7 @@ flowchart TD
   
 ```
 
-#### Calculate Feature Dispersion
+### Calculate Feature Dispersion
 
 Feature dispersion (or variability) is to know how feature data is spread out, to know if data is squeezed or scattered, to know if the data is homogeneous or heterogeneous.
 
@@ -340,7 +391,7 @@ The most famous methods to calculate dispersion are:
 
 In next subsection, each method will be discussed briefly with an `R` example if applicable
 
-##### Range and Interquartile Range
+#### Range and Interquartile Range
 
 -   **Range** is the difference between maximum and minimum values in the dataset
 -   **Interquartile Range** is the difference between *75th* and *25th* quartiles values
@@ -351,7 +402,7 @@ To obtain needed values to calculate both **Range** and **Interquartile Range** 
 summary(trees$Height)
 ```
 
-##### Variance
+#### Variance
 
 Variance is the important and known dispersion value and symbolized as $\sigma^2$ and can be calculated as follow: $$
  \sigma^2 = \sum{\frac{(x_i - \mu)^2}{N}}
@@ -363,7 +414,7 @@ To calculate **variance** in `R`, use `var` function as follow
 var(trees$Height)
 ```
 
-##### Standard Deviation
+#### Standard Deviation
 
 Standard deviation is simply the square root of variance and to calculate it in `R`, use `sd` function as follow
 
@@ -372,7 +423,7 @@ sd(trees$Height)
 sd(trees$Height) == sqrt(var(trees$Height))
 ```
 
-### Visualize Features
+## Feature Visualization {#sec-visualization}
 
 Numerical analysis is very important as discussed in previous section. However, a picture worthies more than a thousand word. Hence, **FAM** presents its third function to summarize feature data in a more easy-to-understand plot using [cavansXpress](https://canvasxpress.org/).
 
@@ -380,16 +431,15 @@ Numerical analysis is very important as discussed in previous section. However, 
 
 In next sections, the **FAM** module implemented features graphical representations based on feature type
 
-:::{.callout-note}
+::: callout-note
 If you are using the html version of this book, you can enjoy canvasXpress plots features as right click menu and top bar menu
 :::
 
-#### Pie Chart
+### Pie Chart
 
 [Pie Chart](https://canvasxpress.org/examples/pie-1.html) is the simplest method to visualize categorical data. It is a circle divided into sectors. Each sector represent a feature relative frequency (upon hovering over plot, both frequency and relative frequency will be shown). Sum of the sectors equal 100%, review @fig-2_6
 
 ::: {.content-visible when-format="html"}
-
 ```{r, echo=FALSE, message=FALSE}
 #| label: fig-2_6
 #| fig-cap: "Pie Chart for Categorical Data"
@@ -413,19 +463,17 @@ canvasXpress(
     graphType        = "Pie"
 )
 ```
-
 :::
 
 ::: {.content-visible when-format="pdf"}
-![Pie Chart for Categorical Data](Images/2_2_a_pie_chart.png){#fig-2_6 width=60%}
+![Pie Chart for Categorical Data](Images/2_2_a_pie_chart.png){#fig-2_6 width="60%"}
 :::
 
-#### Bar Plot
+### Bar Plot
 
 [Bar Plot](https://canvasxpress.org/examples/bar-1.html) is another method to visualize categorical data, and the most famous. Usually, each category is represented as a bar in the X-axis while bar height represents either category frequency (absolute or relative). The tallest bar is representing the *mode*, review @fig-2_7-1 and @fig-2_7-2
 
 ::: {.content-visible when-format="html"}
-
 ```{r, echo=FALSE, message=FALSE}
 #| label: fig-2_7
 #| fig-cap: "Different Bar Chart Views for mtcars Cyl Categorical Features Data"
@@ -484,40 +532,35 @@ canvasXpress(
     xAxisTitle       = "Distribution(%)"
 )
 ```
-
 :::
 
 ::: {.content-visible when-format="pdf"}
-::: {#fig-2_7 layout-nrow=2}
+::: {#fig-2_7 layout-nrow="2"}
+![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_7-1 width="48%"}
 
-![Absolute Frequencies](Images/2_3_a_bar_plot.png){#fig-2_7-1 width=48%}
+![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_7-2 width="48%"}
 
-![Relative Frequencies](Images/2_3_b_bar_plot.png){#fig-2_7-2 width=48%}
+![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_7-3 width="48%"}
 
-![Absolute Stacked Frequencies](Images/2_3_c_bar_plot.png){#fig-2_7-3 width=48%}
+![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_7-4 width="48%"}
 
-![Relative Stacked Frequencies](Images/2_3_d_bar_plot.png){#fig-2_7-4 width=48%}
-
-Different Bar Chart Views for mtcars Cyl Categorical Features Data 
-
+Different Bar Chart Views for mtcars Cyl Categorical Features Data
 :::
 :::
 
+There are other views for [Bar Plot](https://canvasxpress.org/examples/bar-1.html) like [Stacked Plots](https://canvasxpress.org/examples/stacked-1.html) and [Stacked Percent Plots](https://canvasxpress.org/examples/stackedpercent-1.html) where bars are stacked above each other to show cumulative distribution along with regular distribution, review @fig-2_7-3 and @fig-2_7-4
 
-There are other views for [Bar Plot](https://canvasxpress.org/examples/bar-1.html) like [Stacked Plots](https://canvasxpress.org/examples/stacked-1.html) and [Stacked Percent Plots](https://canvasxpress.org/examples/stackedpercent-1.html) where bars are stacked above each other to show cumulative distribution along with regular distribution, review @fig-2_7-3 and @fig-2_7-4 
-
-:::{.callout-tip}
+::: callout-tip
 If categories count is large, bar plot became so dense and might be hard to digest and Histogram plots can be used instead
 :::
 
-#### Histogram
+### Histogram
 
 [Histogram](https://canvasxpress.org/examples/histogram-1.html) idea is very similar to [Bar Plot](https://canvasxpress.org/examples/bar-1.html) but for numerical data (continues and discrete).Mainly the data is divided into multiple intervals (bins). Each bin is represented by its own bar. Bar height represents the frequency for the data within that interval
 
 Using [canvasXpress](https://canvasxpress.org), analyzer can control number of bins and/or bin width. Also analyzer can change the bars into [Dot Plot](https://canvasxpress.org/examples/dotplot-1.html) to display *Relative Frequency*, @fig-2_8
 
 ::: {.content-visible when-format="html"}
-
 ```{r, echo=FALSE, message=FALSE}
 #| label: fig-2_8
 #| fig-cap: "Different Histogram Chart Views for mtcars MPG Numerical Features Data"
@@ -552,26 +595,23 @@ canvasXpress(
     histogramData      = TRUE
 )
 ```
-
 :::
 
 ::: {.content-visible when-format="pdf"}
-::: {#fig-2_8 layout-ncol=2}
-![Histogram](Images/2_4_a_hist_plot.png){#fig-2_8a width=48%}
+::: {#fig-2_8 layout-ncol="2"}
+![Histogram](Images/2_4_a_hist_plot.png){#fig-2_8a width="48%"}
 
-![Histogram Dot plot](Images/2_4_b_hist_plot.png){#fig-2_8b width=48%}
+![Histogram Dot plot](Images/2_4_b_hist_plot.png){#fig-2_8b width="48%"}
 
 Different Histogram Chart Views for mtcars MPG Numerical Features Data
-
 :::
 :::
 
-#### Density Plot
+### Density Plot
 
 [Density Plot](https://canvasxpress.org/examples/density-1.html) is another representation for numerical data but with different look and feel as there is no need to partition data artificially into bins. [canvasXpress](https://canvasxpress.org) has many features to control density plot. Also analyzer can show both histogram and density plot in the same plot, review @fig-2_9
 
 ::: {.content-visible when-format="html"}
-
 ```{r, echo=FALSE, message=FALSE}
 #| label: fig-2_9
 #| fig-cap: "Different Density Chart Views for mtcars MPG Numerical Features Data"
@@ -611,26 +651,23 @@ canvasXpress(
 
 
 ```
-
 :::
 
 ::: {.content-visible when-format="pdf"}
-::: {#fig-2_9 layout-ncol=2}
-![regular density plot](Images/2_5_a_densityt_plot.png){#fig-2_9a width=48%}
+::: {#fig-2_9 layout-ncol="2"}
+![regular density plot](Images/2_5_a_densityt_plot.png){#fig-2_9a width="48%"}
 
-![density plot showing mean value](Images/2_5_b_densityt_plot.png){#fig-2_9b width=48%}
+![density plot showing mean value](Images/2_5_b_densityt_plot.png){#fig-2_9b width="48%"}
 
 Different Density Chart Views for mtcars MPG Numerical Features Data
-
 :::
 :::
 
-#### Boxplot
+### Boxplot
 
 One of the best methods to describe numerical feature measure tendency and dispersion is [Boxplot](https://canvasxpress.org/examples/boxplot-1.html). It shows median, quartiles, minimum, maximum, and outlier values in the same plot easily, these info can be displayed via plot tooltip upon hovering on the box, review @fig-2_10
 
 ::: {.content-visible when-format="html"}
-
 ```{r, echo=FALSE, message=FALSE}
 #| label: fig-2_10
 #| fig-cap: Boxplot for Numerical Feature
@@ -652,12 +689,10 @@ canvasXpress(
 
 
 ```
-
 :::
- 
 
 ::: {.content-visible when-format="pdf"}
-![Boxplot for Numerical Feature](Images/2_6_a_box_plot.png){#fig-2_10 width=60%}
+![Boxplot for Numerical Feature](Images/2_6_a_box_plot.png){#fig-2_10 width="60%"}
 :::
 
 Before moving into module UI design, we can review module functions in review @fig-2_11
@@ -695,8 +730,8 @@ stateDiagram-v2
 
 I can only think of a few dozen ways to represent module UI and interactivity with the user, such as:
 
-- Module can generate full data report offline and make it downloadable to user
-- Or it can be a shiny page with all features information
+-   Module can generate full data report offline and make it downloadable to user
+-   Or it can be a shiny page with all features information
 
 In order to make it more easy for us to design out module UI, let us start by how module user (the user shiny app) will interact with it and how it will send required data and configurations to it and how it will embed module output in app UI in general. The most important step is to define UI sequence diagram, then implement the behaviour using any UI arrangements and controls you like, review @fig-2_12.
 
@@ -729,28 +764,24 @@ sequenceDiagram
   
 ```
 
+A sample of analyzed feature sample can be reviewed in @fig-2_13
 
-A sample of analyzed feature sample can be reviewed in @fig-2_13 
+![Feature Analysis Sample](Images/2_7_feature_analysis.png){#fig-2_13}
 
-![Feature Analysis Sample](Images/2_7_feature_analysis.png){#fig-2_13} 
-
-
-::: {.callout-note}
-That is a simple suggestion for single feature analysis. You implementation could different and definitely will be more awesome 
+::: callout-note
+That is a simple suggestion for single feature analysis. You implementation could different and definitely will be more awesome
 :::
 
-
-::: {.callout-note}
+::: callout-note
 The complete module solution can be found in book solutions GitHub
 :::
 
-
-
 ## Excerises
 
-1. Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
+1. **FAM** used both `data.frame` and `tibbles` as a module input. However, `R` has many other data types for storing data (i.e matrix, tables, ...). Please modify **FAM** input to accept additional data type. What needs to be changed? how that will affect other **FAM** functions?
 
-1. Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+2.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
 
-1. In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic–geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
+3.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
 
+4.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
