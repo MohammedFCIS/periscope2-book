@@ -23,7 +23,7 @@ FAM main function is to define data features and and their behavior. This functi
 
 ### Input
 
-FAM module have two different input types:
+FAM module has two input types:
 
 -   Data input: that will be any `R` data.frame object
 -   Configurations input: that is list of configuration parameters that are needed for each FAM function
@@ -59,13 +59,13 @@ Defining module output is essential part to identify module functions and input.
 
 Discussing each function output or UI design will be part of each function building steps
 
-check commit ?? for implemented function
+*TODO: Refer to app state at this point (GH PR)*
 
 ## Data Summarization {#sec-data}
 
 ### Definition
 
-Data can be defined as a collection of observations or facts that describe an event or a fact in order to make an informative decision later
+Data can be defined as a collection of observations or facts that describe an event or a fact in order to make an informative decision later [see @Heumann2016, p. 3]
 
 Examples for that can be:
 
@@ -85,7 +85,7 @@ Each feature gives an insight or different look into the data in which leads to 
 
 #### Input
 
-Since the most commonly used data types to store data in `R ` are `data.format` and `tibbles` types,  these are the two types that will be used as an input for the **FAM** module. 
+Since the most commonly used data types to store data in `R ` are `data.frame` and `tibbles` types,  these are the two types that will be used as an input for the **FAM** module. 
 
 #### Output
 
@@ -96,7 +96,7 @@ Function output is either:
 
 #### Workflow
 
-Check figure @fig-2_2 for function workflow
+Next is to define the function workflow, check figure @fig-2_2
 
 ```{mermaid}
 %%| fig-cap: "Data Summarization workflow"
@@ -122,7 +122,7 @@ sequenceDiagram
 
 #### UI
 
-periscope alerts and logs
+*TODO: Refer to app UI state at this point (screen shot)*
 
 ## Features Types Identification {#sec-IFDT}
 
