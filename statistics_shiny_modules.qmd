@@ -96,7 +96,7 @@ Function output is either:
 
 #### Workflow
 
-Next is to define the function workflow, check figure @fig-2_2
+Next is to define the function workflow, check @fig-2_2
 
 ```{mermaid}
 %%| fig-cap: "Data Summarization workflow"
@@ -695,7 +695,11 @@ canvasXpress(
 ![Boxplot for Numerical Feature](Images/2_6_a_box_plot.png){#fig-2_10 width="60%"}
 :::
 
-Before moving into module UI design, we can review module functions in review @fig-2_11
+## Summary
+
+### Module Functions
+
+All discussed functions in  (@sec-cfss) and (@sec-visualization) can be summarized as follow in @fig-2_11
 
 ```{mermaid}
 %%| fig-cap: "FAM Functions Summary"
@@ -726,14 +730,10 @@ stateDiagram-v2
 
 ```
 
-## Module UI {#sec-moduleUI}
 
-I can only think of a few dozen ways to represent module UI and interactivity with the user, such as:
+### Module Workflow
 
--   Module can generate full data report offline and make it downloadable to user
--   Or it can be a shiny page with all features information
-
-In order to make it more easy for us to design out module UI, let us start by how module user (the user shiny app) will interact with it and how it will send required data and configurations to it and how it will embed module output in app UI in general. The most important step is to define UI sequence diagram, then implement the behaviour using any UI arrangements and controls you like, review @fig-2_12.
+@fig-2_2 can be updated to include summarized FAM functions workflow and how module parts are interacting with each other and with module user, review @fig-2_12
 
 ```{mermaid}
 %%| fig-cap: "FAM Usage Sequence Diagram"
@@ -746,25 +746,29 @@ sequenceDiagram
   participant FAMS as FAM Server
   participant FAMU as FAM UI
   
-  CSA  ->>  FAMS: Send Reactive data.frame
-  FAMS ->>  FAMS: Identify observations and features Stat.
-  FAMS -->> FAMU: Render observations <br/> and features Stat.
-  FAMS ->>  FAMS: Identify feature types
-  FAMS -->> FAMU: Populate features dropdown <br/> with identified features types
-  CSA  ->>  FAMU: Select feature
-  FAMU -->> FAMU: Activate related feature <br/> type configuration inputs
-  CSA  ->>  FAMU: Select feature related configuration Inputs
-  CSA  ->>  FAMU: Click "Analyze Feature" button
-  FAMU -->> FAMS: Send selected feature <br/> along with selected configurations
-  FAMS -->> FAMU: Render feature output <br/> with stat and CX empty slots
-  FAMS ->>  FAMS: Calculate statistical summary
-  FAMS -->> FAMU: Render statistical info
-  FAMS ->>  FAMS: Visualize feature data
-  FAMS -->> FAMU: Render canvasXpress plot
+  CSA  ->>  FAMS: Send data and configurations param
+  FAMS ->>  FAMS: Summarize data and identify features
+  FAMS -->> FAMU: Render observations <br/> and features Stat
+  FAMU ->> CSA: Display data summary
+  loop Each Feature
+      FAMS ->>  FAMS: Identify feature type
+      FAMS ->>  FAMS: Calculate statistical summary
+      FAMS -->> FAMU: Render statistical info
+      FAMS -->> FAMS: Visualize statistical info
+      FAMS -->> FAMU: Render canvasXpress plot
+  end
+  FAMU ->> CSA: All features report
   
 ```
 
-A sample of analyzed feature sample can be reviewed in @fig-2_13
+### Module UI {#sec-moduleUI}
+
+There can be dozen ways to represent module UI and interactivity with the user, such as:
+
+-   Module can generate full data report offline and make it downloadable to user
+-   Or it can be a shiny page with all features information
+
+FAM selected the later solution and implemented full shiny page with all features as seen in @fig-2_13 (*TODO: update screen shot after app is complete and refer to GH PR*)
 
 ![Feature Analysis Sample](Images/2_7_feature_analysis.png){#fig-2_13}
 
@@ -780,10 +784,12 @@ The complete module solution can be found in book solutions GitHub
 
 1. **FAM** used both `data.frame` and `tibbles` as a module input. However, `R` has many other data types for storing data (i.e matrix, tables, ...). Please modify **FAM** input to accept additional data type. What needs to be changed? how that will affect other **FAM** functions?
 
-2. Define configuration input parameters needed to perform (@sec-cfss) and (@sec-visualization) functions and suggest proper default values.
+2.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
 
-3.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
+3. Define configuration input parameters needed to perform (@sec-cfss) and (@sec-visualization) functions and suggest proper default values.
 
-4.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+4.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
 
-5.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
+5.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+
+
