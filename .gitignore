@@ -1,2 +1,7 @@
-/.quarto/
+**/.quarto/**
 .Rproj.user
+.Rhistory
+.Ruserdata
+.RData
+**/_book/**
+**/*.html
