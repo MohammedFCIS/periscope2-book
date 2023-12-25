@@ -126,7 +126,7 @@ sequenceDiagram
 
 ## Features Types Identification {#sec-IFDT}
 
-To analyze data features and extract useful insights from it, we need to understand its nature and type to analyze it correctly and since features can be considered data descriptors, they can be anything and have any type. However, we can classify any feature type into two main groups:
+Data features are data descriptors, they can be anything and have any type [see @Heumann2016, p. 4]. However, features can be classified into two main groups:
 
 -   Complex Feature
 -   Simple Feature
@@ -169,7 +169,7 @@ In next sections, we will discuss these types in more detail and discuss how to 
 
 ### Categorical Feature
 
-Categorical feature is data that cannot be measured with numbers and have finite number of categories or distinct groups (i.e gender, race, language, etc..), However, it still can take numeric *form* (i.e age groups, weight groups, etc..).
+Categorical feature is data that cannot be measured with numbers and have finite number of categories or distinct groups (i.e gender, race, language, etc..), but it still can take numeric *form* (i.e age groups, weight groups, etc..) [see @Heumann2016, p. 5].
 
 Categorical data can be classified into two sub types:
 
@@ -227,7 +227,7 @@ flowchart TD
 
 ### Numerical Features
 
-By reviewing @fig-2_2, we know that numerical features can either be **Discrete** or **Continuous**
+By reviewing @fig-2_2, we know that numerical features can either be **Discrete** or **Continuous** [see @Heumann2016, pp. 6-8]
 
 #### Discrete Feature
 
@@ -247,7 +247,7 @@ Continues feature is a numeric feature with an infinite and uncountable number o
 
 #### Identifying Numerical Features
 
-Both numerical features can be mapped into `numeric` data type in `R`and to be more specific `Discreate` features can be mapped to `integer` datatype while continuous feature can be mapped to `double` type.
+Both numerical features can be mapped into `numeric` data type in `R` and to be more specific `Discreate` features can be mapped to `integer` datatype while continuous feature can be mapped to `double` type.
 
 However, that distinction can be tricky in `R` using either `class` or `typeof` functions, check:
 
