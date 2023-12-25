@@ -1,5 +1,9 @@
 **/.quarto/**
 .Rproj.user
+.Rproj.user
 .Rhistory
 .RData
+.Ruserdata
+.RData
 **/_book/**
+**/*.html
