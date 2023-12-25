@@ -776,12 +776,14 @@ That is a simple suggestion for single feature analysis. You implementation coul
 The complete module solution can be found in book solutions GitHub
 :::
 
-## Excerises
+## Exercises
 
 1. **FAM** used both `data.frame` and `tibbles` as a module input. However, `R` has many other data types for storing data (i.e matrix, tables, ...). Please modify **FAM** input to accept additional data type. What needs to be changed? how that will affect other **FAM** functions?
 
-2.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
+2. Define configuration input parameters needed to perform (@sec-cfss) and (@sec-visualization) functions and suggest proper default values.
 
-3.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+3.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
 
-4.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
+4.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
+
+5.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
