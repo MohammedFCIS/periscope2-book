@@ -14,41 +14,45 @@ FAA function is to analyze the association between two or more of data features.
 
 ### Input
 
-FAM module has two input types:
-
--   Data input: that will be any `R` data.frame object
--   Configurations input: that is list of configuration parameters that are needed for each FAM function
-    -   These parameters will be defined through the journey of building module different functions
-
-Check @fig-2_1 for FAM module objective and IO summary
-
-```{mermaid}
-%%| fig-cap: "Feature Analyzer Module (FAM) Objective and IO"
-%%| fig-width: 3 
-%%| label: fig-2_1
-flowchart TD
-  A[R data.frame] --> C>"Feature Analyzer Module
-  - Identify feature type
-  - Calculate feature statistical summary
-  - Visualize feature data"]
-  B[Configurations input] --> C
-  C --> D["- Data Summary
-  - Data Features type, 
-    properties and statistical summary
-  - Data Features plots"]
-```
-
+FAA module is an interactive module that is initialized by data object. After identifying data features, module user will be able to select two or more features to analyze their association. 
 
 ### Output
 
-Defining module output is essential part to identify module functions and input. FAM module output will be a report that displays:
+For each association analysis process, FAA generates:
 
--   Data summary (features count and observations count)
--   Data features info:
-    -   Features type, properties and statistical summary
-    -   Features visualization
+- Interactive and downloadable table with analysis statistical summary (if available) using [periscope2 downloadableTable module](https://aggregate-genius.github.io/periscope2/articles/downloadableTable-module.html)
+- Interactive and downloadable visualization plot using [cavansXpress](https://canvasxpress.org/)
 
-Discussing each function output or UI design will be part of each function building steps
+Check @fig-3_1 for FAA module objective and IO summary
+
+```{mermaid}
+%%| fig-cap: "FAA module objective and IO summary"
+%%| fig-width: 5.2
+%%| label: fig-3_1
+
+sequenceDiagram
+  actor CSA as Client Shiny App
+  participant FAAS as FAA Server
+  participant FAAU as FAA UI
+  
+  CSA  ->>  FAAS: Send data
+  FAAS ->>  FAAS: Identify features
+  FAAS -->> FAAU: Populate features list input
+  FAAU ->> CSA: Display multi-select features input
+  FAAU ->> CSA: Display analysis trigger button
+  CSA  ->>  FAAU: Select features to analyze
+  CSA  ->>  FAAU: Click analysis trigger button
+  activate FAAS
+  FAAU -->> FAAS: Send features list and trigger analysis
+  FAAS -->> FAAS: Calculate association statistics
+  FAAS -->> FAAU: Populate statistics table
+  FAAU ->> CSA: Display statistic downloadable table
+  FAAS -->> FAAS: Build association plot
+  FAAS -->> FAAU: render CX plot
+  FAAU ->> CSA: Display statistic downloadable interactive CX plot
+  deactivate FAAS
+  
+```
 
 *TODO: Refer to app state at this point (GH PR)*
 
