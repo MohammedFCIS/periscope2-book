@@ -1,4 +1,4 @@
-# Feature Analyzer Module (FAM)
+# Feature Analyzer Module {#sec-fam}
 
 The key to take an informative decision in business, scientific research or even an important aspect in the life, is to understand the related data and what patterns and trends in this data. Hence come the importance of *Feature Analyzer Module (FAM)* to identify data features and understand each feature nature, pattern and trend statistically and visually.
 
@@ -47,7 +47,6 @@ flowchart TD
   - Data Features plots"]
 ```
 
-
 ### Output
 
 Defining module output is essential part to identify module functions and input. FAM module output will be a report that displays:
@@ -85,14 +84,14 @@ Each feature gives an insight or different look into the data in which leads to 
 
 #### Input
 
-Since the most commonly used data types to store data in `R ` are `data.frame` and `tibbles` types,  these are the two types that will be used as an input for the **FAM** module. 
+Since the most commonly used data types to store data in `R` are `data.frame` and `tibbles` types, these are the two types that will be used as an input for the **FAM** module.
 
 #### Output
 
 Function output is either:
 
-- data features count and observations count
-- or error message if the data is invalid or has invalid data type
+-   data features count and observations count
+-   or error message if the data is invalid or has invalid data type
 
 #### Workflow
 
@@ -699,7 +698,7 @@ canvasXpress(
 
 ### Module Functions
 
-All discussed functions in  (@sec-cfss) and (@sec-visualization) can be summarized as follow in @fig-2_11
+All discussed functions in (@sec-cfss) and (@sec-visualization) can be summarized as follow in @fig-2_11
 
 ```{mermaid}
 %%| fig-cap: "FAM Functions Summary"
@@ -729,7 +728,6 @@ stateDiagram-v2
     NUS --> NUS2
 
 ```
-
 
 ### Module Workflow
 
@@ -782,14 +780,12 @@ The complete module solution can be found in book solutions GitHub
 
 ## Exercises
 
-1. **FAM** used both `data.frame` and `tibbles` as a module input. However, `R` has many other data types for storing data (i.e matrix, tables, ...). Please modify **FAM** input to accept additional data type. What needs to be changed? how that will affect other **FAM** functions?
+1.  **FAM** used both `data.frame` and `tibbles` as a module input. However, `R` has many other data types for storing data (i.e matrix, tables, ...). Please modify **FAM** input to accept additional data type. What needs to be changed? how that will affect other **FAM** functions?
 
 2.  In this chapter, we only discussed and implemented **arithmetic mean**. However, there are other statistical mean functions that can be implemented to enrich your FAM module as [Geometric mean](https://en.wikipedia.org/wiki/Geometric_mean), [Arithmetic--geometric mean](https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean) or [Cubic mean](https://en.wikipedia.org/wiki/Cubic_mean). Pick one and implement one of them
 
-3. Define configuration input parameters needed to perform (@sec-cfss) and (@sec-visualization) functions and suggest proper default values.
+3.  Define configuration input parameters needed to perform (@sec-cfss) and (@sec-visualization) functions and suggest proper default values.
 
 4.  Using `periscope2` app that is created in chapter 1, implement your own version of **Feature Analyzer** module, then compare your solution against implemented solution in book site.
 
 5.  Integrate `?periscope2::downloadFile` module to your module implementation in order to download all feature statistical summary in one file.
-
-
