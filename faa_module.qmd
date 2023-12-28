@@ -8,9 +8,9 @@ In [Chapter -@sec-fam] *Feature Analyzer Module (FAM)* has been developed to ide
 
 FAA function is to analyze the association between two or more of data features. The analysis will be determined based on the selected features type and count as follow:
 
--   Categorical vs Categorical features(@sec-allcat),
--   Categorical vs Numerical features(@sec-catnum),
--   Numerical vs Numerical features (@sec-allnum)
+-   Discrete vs Discrete features(@sec-allcat),
+-   Discrete vs Continuous features(@sec-catnum),
+-   Continuous vs Continuous features (@sec-allnum)
 
 ### Input
 
@@ -56,11 +56,11 @@ sequenceDiagram
 
 *TODO: Refer to app state at this point (GH PR)*
 
-## Categorical vs Categorical features {#sec-allcat}
+## Discrete vs Discrete features {#sec-allcat}
 
-## Categorical vs Numerical features {#sec-catnum}
+## Discrete vs Continuous features {#sec-catnum}
 
-## Numerical vs Numerical features {#sec-allnum}
+## Continuous vs Continuous features {#sec-allnum}
 
 ## Exercises
 
